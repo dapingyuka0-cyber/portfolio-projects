@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web運用ディレクター | 選ばれる理由を、設計する。</title>
+<meta name="description" content="約4年半、複数業界のクライアントのWeb運用を同時並行で担当。作っただけで終わらせない、選ばれる理由を設計するWeb運用ディレクターのポートフォリオ。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Shippori+Mincho:wght@500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --paper:#F4F6F5;
+  --paper-2:#EDF0EF;
+  --white:#FFFFFF;
+  --ink:#1C2B3A;
+  --ink-soft:#5A6B7C;
+  --ink-faint:#93A1AE;
+  --red:#D6362B;
+  --red-soft:rgba(214,54,43,.08);
+  --marker:#FFE163;
+  --grid:rgba(28,43,58,.055);
+  --grid-strong:rgba(28,43,58,.10);
+  --shadow:0 12px 40px rgba(28,43,58,.10);
+  --font-jp:"Zen Kaku Gothic New",-apple-system,"Hiragino Kaku Gothic ProN",sans-serif;
+  --font-mincho:"Shippori Mincho","Hiragino Mincho ProN",serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,monospace;
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --ease-draw:cubic-bezier(.65,0,.35,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-jp);
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.9;
+  font-size:16px;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+/* 方眼紙の背景（分析のメタファー） */
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+    linear-gradient(var(--grid-strong) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid-strong) 1px,transparent 1px);
+  background-size:24px 24px,24px 24px,120px 120px,120px 120px;
+}
+main,header,footer{position:relative;z-index:1}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+::selection{background:var(--marker);color:var(--ink)}
+
+/* ============================================================
+   共通ユーティリティ
+   ============================================================ */
+.wrap{max-width:1200px;margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+.mono{font-family:var(--font-mono)}
+.sec{padding:clamp(96px,14vh,180px) 0;position:relative}
+
+/* セクション見出し（ファイルのインデックスタブ風） */
+.sec-head{display:flex;align-items:baseline;gap:18px;margin-bottom:clamp(40px,7vw,72px);flex-wrap:wrap}
+.sec-tab{
+  font-family:var(--font-mono);font-size:12px;letter-spacing:.18em;
+  color:var(--white);background:var(--ink);
+  padding:6px 14px 5px;position:relative;white-space:nowrap;
+}
+.sec-tab::after{
+  content:"";position:absolute;right:-10px;top:0;
+  border-top:14.5px solid var(--ink);border-bottom:14.5px solid var(--ink);
+  border-right:10px solid transparent;
+}
+.sec-title{
+  font-size:clamp(26px,4.4vw,44px);font-weight:900;letter-spacing:.02em;line-height:1.35;
+}
+.sec-note{font-size:13px;color:var(--ink-soft);width:100%;max-width:560px}
+
+/* スクロール連動リビール */
+.rv{opacity:0;transform:translateY(28px);transition:opacity .9s var(--ease-out),transform .9s var(--ease-out)}
+.rv.is-in{opacity:1;transform:none}
+.rv-d1{transition-delay:.12s}.rv-d2{transition-delay:.24s}.rv-d3{transition-delay:.36s}
+/* 左からのマスク開き（視線＝読み方向と連動） */
+.rv-wipe{clip-path:inset(0 100% 0 0);transition:clip-path 1s var(--ease-draw)}
+.rv-wipe.is-in{clip-path:inset(0 0 0 0)}
+
+/* マーカー（蛍光ペン）：スクロールで塗られる */
+.mk{
+  background-image:linear-gradient(transparent 55%,var(--marker) 55%,var(--marker) 92%,transparent 92%);
+  background-repeat:no-repeat;background-size:0% 100%;
+  transition:background-size 1s var(--ease-draw) .35s;
+}
+.mk.is-in{background-size:100% 100%}
+
+/* 赤の下線（ペンで引く動き） */
+.ul-red{position:relative;display:inline-block}
+.ul-red svg{position:absolute;left:-2%;bottom:-.28em;width:104%;height:.5em;overflow:visible;pointer-events:none}
+.ul-red path{fill:none;stroke:var(--red);stroke-width:3.2;stroke-linecap:round;
+  stroke-dasharray:var(--len,300);stroke-dashoffset:var(--len,300);
+  transition:stroke-dashoffset 1.1s var(--ease-draw) .3s}
+.is-in .ul-red path,.ul-red.is-in path{stroke-dashoffset:0}
+
+/* 赤入れの注釈メモ */
+.anno{
+  font-family:var(--font-mono);color:var(--red);font-size:12px;letter-spacing:.06em;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.anno::before{content:"※";font-size:13px}
+
+/* ============================================================
+   HEADER / NAV
+   ============================================================ */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:18px clamp(20px,4vw,44px);
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background .4s,box-shadow .4s,padding .4s;
+}
+.header.is-scrolled{background:rgba(244,246,245,.92);backdrop-filter:blur(10px);box-shadow:0 1px 0 var(--grid-strong);padding-top:12px;padding-bottom:12px}
+.logo{display:flex;flex-direction:column;line-height:1.3}
+.logo .en{font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;color:var(--red)}
+.logo .jp{font-weight:900;font-size:15px;letter-spacing:.08em}
+.gnav{display:flex;gap:34px;align-items:center}
+.gnav a{font-size:13px;font-weight:700;letter-spacing:.1em;position:relative;padding:4px 0}
+.gnav a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--red);transform:scaleX(0);transform-origin:right;transition:transform .35s var(--ease-out)}
+.gnav a:hover::after{transform:scaleX(1);transform-origin:left}
+.gnav .nav-idx{font-family:var(--font-mono);font-size:10px;color:var(--red);margin-right:4px}
+.nav-cta{background:var(--ink);color:var(--white)!important;padding:10px 20px;font-size:13px;letter-spacing:.1em;transition:background .3s}
+.nav-cta:hover{background:var(--red)}
+.nav-cta::after{display:none}
+
+/* ハンバーガー（モバイル） */
+.burger{display:none;width:44px;height:44px;position:relative;z-index:120}
+.burger span{position:absolute;left:10px;width:24px;height:2px;background:var(--ink);transition:.35s var(--ease-out)}
+.burger span:nth-child(1){top:16px}
+.burger span:nth-child(2){top:23px}
+.burger span:nth-child(3){top:30px}
+.burger.is-open span:nth-child(1){top:23px;transform:rotate(45deg);background:var(--white)}
+.burger.is-open span:nth-child(2){opacity:0}
+.burger.is-open span:nth-child(3){top:23px;transform:rotate(-45deg);background:var(--white)}
+
+.m-nav{
+  position:fixed;inset:0;z-index:110;background:var(--ink);color:var(--white);
+  display:flex;flex-direction:column;justify-content:center;padding:0 32px;
+  visibility:hidden;opacity:0;transition:opacity .4s var(--ease-out),visibility 0s .4s;
+}
+.m-nav.is-open{visibility:visible;opacity:1;transition:opacity .4s var(--ease-out)}
+.m-nav a{
+  font-size:26px;font-weight:900;letter-spacing:.06em;padding:16px 0;
+  border-bottom:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:baseline;gap:14px;
+  opacity:0;transform:translateX(-24px);
+  transition:opacity .5s var(--ease-out),transform .5s var(--ease-out);
+}
+.m-nav.is-open a{opacity:1;transform:none}
+.m-nav.is-open a:nth-child(2){transition-delay:.08s}
+.m-nav.is-open a:nth-child(3){transition-delay:.16s}
+.m-nav.is-open a:nth-child(4){transition-delay:.24s}
+.m-nav.is-open a:nth-child(5){transition-delay:.32s}
+.m-nav a .nav-idx{font-family:var(--font-mono);font-size:12px;color:var(--marker)}
+.m-nav .m-note{margin-top:28px;font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;color:rgba(255,255,255,.5);opacity:0;transition:opacity .6s .45s}
+.m-nav.is-open .m-note{opacity:1}
+
+/* ============================================================
+   HERO（ファーストビュー）
+   ============================================================ */
+.hero{
+  min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  position:relative;padding:120px 0 80px;overflow:hidden;
+}
+.hero-label{
+  display:inline-flex;align-items:center;gap:12px;margin-bottom:26px;
+  opacity:0;animation:heroIn .8s var(--ease-out) .2s forwards;
+}
+.hero-label .tag{
+  background:var(--red);color:var(--white);font-weight:700;font-size:13px;
+  letter-spacing:.14em;padding:7px 16px;
+}
+.hero-label .en{font-family:var(--font-mono);font-size:11px;letter-spacing:.24em;color:var(--ink-soft)}
+
+.hero-copy{
+  font-weight:900;letter-spacing:.015em;line-height:1.42;
+  font-size:clamp(34px,7.2vw,84px);
+}
+.hero-line{display:block;overflow:hidden}
+.hero-line>span{display:inline-block;transform:translateY(110%);animation:lineUp 1s var(--ease-out) forwards}
+.hero-line:nth-child(1)>span{animation-delay:.45s}
+.hero-line:nth-child(2)>span{animation-delay:.65s}
+@keyframes lineUp{to{transform:translateY(0)}}
+@keyframes heroIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* 「作っただけ」に取り消し線（赤入れ）……ではなく強調の打消し表現 */
+.strike{position:relative;white-space:nowrap}
+.strike::after{
+  content:"";position:absolute;left:-1%;top:54%;height:4px;width:102%;background:var(--red);
+  transform:scaleX(0);transform-origin:left;
+  animation:strikeIn .6s var(--ease-draw) 1.7s forwards;
+}
+@keyframes strikeIn{to{transform:scaleX(1)}}
+.strike-fix{
+  position:absolute;left:2%;top:-.72em;
+  font-family:var(--font-mono);font-size:clamp(11px,1.4vw,15px);font-weight:600;
+  color:var(--red);letter-spacing:.08em;white-space:nowrap;
+  opacity:0;animation:heroIn .5s var(--ease-out) 2.15s forwards;
+}
+
+/* 赤ペンの円（選ばれる理由） */
+.circle-red{position:relative;display:inline-block;padding:0 .06em}
+.circle-red svg{
+  position:absolute;inset:-14% -7% -18% -7%;width:114%;height:132%;
+  overflow:visible;pointer-events:none;
+}
+.circle-red path{
+  fill:none;stroke:var(--red);stroke-width:3.4;stroke-linecap:round;
+  stroke-dasharray:1000;stroke-dashoffset:1000;
+  animation:draw 1.4s var(--ease-draw) 2.5s forwards;
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* マーカー（設計する） */
+.hero .mk-hero{
+  background-image:linear-gradient(transparent 52%,var(--marker) 52%,var(--marker) 94%,transparent 94%);
+  background-repeat:no-repeat;background-size:0% 100%;
+  animation:mkIn 1s var(--ease-draw) 3.3s forwards;
+}
+@keyframes mkIn{to{background-size:100% 100%}}
+
+/* 余白の校正メモ（浮遊注釈） */
+.hero-annos{position:absolute;inset:0;pointer-events:none}
+.h-anno{
+  position:absolute;font-family:var(--font-mono);font-size:12px;color:var(--red);
+  letter-spacing:.05em;opacity:0;
+  animation:annoIn .7s var(--ease-out) forwards;
+}
+.h-anno .ln{display:block;width:52px;height:1.5px;background:var(--red);margin-top:5px;transform-origin:left;transform:scaleX(0);animation:strikeIn .5s var(--ease-draw) forwards}
+.h-anno-1{top:20%;right:8%;animation-delay:2.9s}
+.h-anno-1 .ln{animation-delay:3.2s}
+.h-anno-2{bottom:26%;right:16%;animation-delay:3.6s}
+.h-anno-2 .ln{animation-delay:3.9s}
+@keyframes annoIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.hero-sub{
+  margin-top:36px;max-width:620px;color:var(--ink-soft);font-size:clamp(14px,1.6vw,16px);
+  opacity:0;animation:heroIn .8s var(--ease-out) 1.3s forwards;
+}
+.hero-sub b{color:var(--ink)}
+
+/* 実務の数字ティッカー */
+.hero-stats{
+  margin-top:44px;display:flex;gap:0;flex-wrap:wrap;
+  border-top:1px solid var(--grid-strong);
+  opacity:0;animation:heroIn .8s var(--ease-out) 1.6s forwards;
+}
+.h-stat{
+  padding:20px 34px 20px 0;margin-right:34px;
+  border-right:1px dashed var(--ink-faint);
+}
+.h-stat:last-child{border-right:none}
+.h-stat .num{font-family:var(--font-mono);font-weight:600;font-size:clamp(22px,3vw,32px);letter-spacing:-.01em;line-height:1.2}
+.h-stat .num small{font-size:.55em;font-weight:500;margin-left:2px}
+.h-stat .lbl{font-size:12px;color:var(--ink-soft);letter-spacing:.06em;margin-top:2px}
+
+.scroll-cue{
+  position:absolute;bottom:28px;left:clamp(20px,5vw,64px);
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.3em;color:var(--ink-soft);
+  opacity:0;animation:heroIn 1s var(--ease-out) 3.8s forwards;
+}
+.scroll-cue .bar{width:1.5px;height:56px;background:var(--grid-strong);position:relative;overflow:hidden}
+.scroll-cue .bar::after{content:"";position:absolute;top:-40%;left:0;width:100%;height:40%;background:var(--red);animation:cueDown 1.8s var(--ease-draw) infinite}
+@keyframes cueDown{to{top:110%}}
+
+/* ============================================================
+   SEC.01 強み（非対称レイアウト）
+   ============================================================ */
+.strengths{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(16px,2.4vw,28px);align-items:stretch}
+.st-card{
+  background:var(--white);border:1px solid var(--grid-strong);
+  padding:clamp(26px,3.4vw,48px);position:relative;overflow:hidden;
+  transition:transform .5s var(--ease-out),box-shadow .5s var(--ease-out);
+}
+.st-card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.st-1{grid-column:1/8;grid-row:1/3}
+.st-2{grid-column:8/13;grid-row:1/2;margin-top:clamp(24px,4vw,56px)}
+.st-3{grid-column:8/13;grid-row:2/3;max-width:86%;justify-self:end}
+.st-rank{
+  position:absolute;top:18px;right:20px;font-family:var(--font-mono);
+  font-size:11px;color:var(--ink-faint);letter-spacing:.14em;
+}
+.st-card h3{font-size:clamp(19px,2.3vw,27px);font-weight:900;line-height:1.5;margin:14px 0 12px}
+.st-card p{font-size:14px;color:var(--ink-soft);line-height:2}
+.st-icon{width:44px;height:44px}
+.st-icon svg{width:100%;height:100%;stroke:var(--red);fill:none;stroke-width:1.6}
+.st-icon .dr{stroke-dasharray:200;stroke-dashoffset:200;transition:stroke-dashoffset 1.4s var(--ease-draw) .3s}
+.is-in .st-icon .dr{stroke-dashoffset:0}
+.st-num{
+  font-family:var(--font-mono);font-weight:600;color:var(--ink);
+  font-size:clamp(38px,5.4vw,68px);line-height:1.1;letter-spacing:-.02em;margin-top:22px;
+}
+.st-num small{font-size:.42em;font-weight:500;color:var(--ink-soft);margin-left:4px}
+.st-1 .st-num{color:var(--red)}
+.st-tagline{font-size:12px;font-family:var(--font-mono);color:var(--ink-faint);letter-spacing:.1em;margin-top:6px}
+/* 大カードのレポート→契約の図解 */
+.st-flow{display:flex;align-items:center;gap:14px;margin-top:28px;flex-wrap:wrap}
+.st-flow .box{border:1.5px solid var(--ink);padding:8px 16px;font-size:13px;font-weight:700;background:var(--paper)}
+.st-flow .box.red{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+.st-flow .arr{font-family:var(--font-mono);color:var(--ink-faint);position:relative}
+.st-flow .arr::after{content:"→"}
+
+/* ============================================================
+   SEC.02 ケーススタディ（段違い配置）
+   ============================================================ */
+.cases{display:flex;flex-direction:column;gap:clamp(48px,8vw,96px)}
+.case{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(16px,2vw,28px);
+  align-items:center;
+}
+.case-visual{
+  position:relative;background:var(--ink);color:var(--white);
+  aspect-ratio:16/10;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.case-visual svg{width:70%;height:70%;overflow:visible}
+.case-body{position:relative}
+.case-1 .case-visual{grid-column:1/8}
+.case-1 .case-body{grid-column:8/13}
+.case-2 .case-visual{grid-column:5/11;order:2}
+.case-2 .case-body{grid-column:1/5;order:1;text-align:left}
+.case-3 .case-visual{grid-column:8/13}
+.case-3 .case-body{grid-column:1/8}
+.case-cat{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--red);margin-bottom:10px;display:block}
+.case h3{font-size:clamp(21px,2.6vw,30px);font-weight:900;line-height:1.5;margin-bottom:14px}
+.case-issue{
+  font-size:13px;color:var(--ink-soft);line-height:2;
+  border-left:2px solid var(--grid-strong);padding-left:16px;margin-bottom:16px;
+}
+.case-issue b{color:var(--ink)}
+.case-voice{
+  font-family:var(--font-mincho);font-size:14px;color:var(--ink);
+  background:var(--white);border:1px solid var(--grid-strong);
+  padding:12px 16px;position:relative;margin-bottom:20px;display:inline-block;
+}
+.case-voice::before{content:"“";position:absolute;top:-14px;left:8px;font-size:34px;color:var(--red);font-family:var(--font-mincho)}
+.case-voice small{display:block;font-family:var(--font-jp);font-size:11px;color:var(--ink-faint);margin-top:4px}
+.case-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:700;letter-spacing:.08em;
+  border:1.5px solid var(--ink);padding:12px 22px;background:var(--white);
+  transition:background .3s,color .3s;
+}
+.case-btn:hover{background:var(--ink);color:var(--white)}
+.case-btn .ar{font-family:var(--font-mono);transition:transform .3s var(--ease-out)}
+.case-btn:hover .ar{transform:translateX(4px)}
+/* ケースのSVGモチーフ描画 */
+.cv-line{fill:none;stroke:var(--marker);stroke-width:2;stroke-linecap:round;
+  stroke-dasharray:600;stroke-dashoffset:600;transition:stroke-dashoffset 1.6s var(--ease-draw) .4s}
+.cv-sub{fill:none;stroke:rgba(255,255,255,.35);stroke-width:1.2;stroke-dasharray:3 6}
+.is-in .cv-line{stroke-dashoffset:0}
+.cv-dot{fill:var(--red);opacity:0;transition:opacity .4s 1.6s}
+.is-in .cv-dot{opacity:1}
+.cv-red{fill:none;stroke:var(--red);stroke-width:2.6;stroke-linecap:round;
+  stroke-dasharray:700;stroke-dashoffset:700;transition:stroke-dashoffset 1.5s var(--ease-draw) .8s}
+.is-in .cv-red{stroke-dashoffset:0}
+.cv-mk{fill:var(--marker);opacity:.9;transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease-draw) .4s}
+.is-in .cv-mk{transform:scaleX(1)}
+.cv-label{font-family:var(--font-mono);font-size:9px;fill:rgba(255,255,255,.6);letter-spacing:.1em}
+
+/* ============================================================
+   SEC.03 軌跡（タイムライン：線が伸びる）
+   ============================================================ */
+.timeline{position:relative;padding-left:clamp(28px,5vw,56px)}
+.tl-line{
+  position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--grid-strong);
+  overflow:hidden;
+}
+.tl-line::after{
+  content:"";position:absolute;top:0;left:0;width:100%;height:100%;
+  background:var(--red);transform:scaleY(var(--p,0));transform-origin:top;
+}
+.tl-item{position:relative;padding-bottom:clamp(40px,6vw,64px)}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{
+  content:"";position:absolute;left:calc(-1*clamp(28px,5vw,56px) + 2px);top:10px;
+  width:14px;height:14px;border-radius:50%;background:var(--paper);
+  border:2.5px solid var(--ink);transition:border-color .4s,background .4s;
+}
+.tl-item.is-in::before{border-color:var(--red);background:var(--red)}
+.tl-phase{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--red)}
+.tl-date{font-family:var(--font-mono);font-size:13px;color:var(--ink-soft);margin:2px 0 6px}
+.tl-item h3{font-size:clamp(18px,2.2vw,24px);font-weight:900}
+.tl-item p{font-size:14px;color:var(--ink-soft);max-width:560px;margin-top:8px}
+
+/* ============================================================
+   SEC.03b できること（プロセスフロー）
+   ============================================================ */
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:0;counter-reset:step;margin-top:8px}
+.pr-step{
+  position:relative;padding:28px 22px 32px;border-top:2px solid var(--grid-strong);
+}
+.pr-step::before{
+  content:"";position:absolute;top:-2px;left:0;height:2px;width:100%;background:var(--red);
+  transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease-draw);
+}
+.pr-step.is-in::before{transform:scaleX(1)}
+.pr-step:nth-child(2).is-in::before{transition-delay:.25s}
+.pr-step:nth-child(3).is-in::before{transition-delay:.5s}
+.pr-step:nth-child(4).is-in::before{transition-delay:.75s}
+.pr-no{font-family:var(--font-mono);font-size:11px;color:var(--red);letter-spacing:.16em}
+.pr-step h3{font-size:clamp(17px,1.9vw,21px);font-weight:900;margin:8px 0 10px;display:flex;align-items:center;gap:8px}
+.pr-step p{font-size:13px;color:var(--ink-soft);line-height:1.95}
+.pr-arrow{
+  position:absolute;right:-9px;top:34px;z-index:2;
+  font-family:var(--font-mono);color:var(--ink-faint);font-size:15px;
+}
+
+/* ============================================================
+   SEC.ABOUT（憑依型の可視化）
+   ============================================================ */
+.about-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(20px,3vw,40px)}
+.about-main{grid-column:1/8}
+.about-side{grid-column:8/13}
+.about-lead{font-size:clamp(16px,1.9vw,19px);font-weight:700;line-height:2.1;margin-bottom:20px}
+.about-txt{font-size:14px;color:var(--ink-soft);margin-bottom:16px}
+/* 口コミ返信のデモ（憑依型の具体） */
+.review-demo{
+  background:var(--white);border:1px solid var(--grid-strong);
+  padding:clamp(20px,2.6vw,30px);position:relative;
+}
+.review-demo .rd-head{font-family:var(--font-mono);font-size:11px;letter-spacing:.16em;color:var(--ink-faint);margin-bottom:16px;display:flex;justify-content:space-between}
+.rd-review{
+  background:var(--paper);padding:14px 16px;font-size:13px;line-height:1.9;
+  border-left:3px solid var(--ink-faint);margin-bottom:18px;
+}
+.rd-review .stars{color:#E8A33D;font-size:12px;letter-spacing:2px}
+.rd-reply{border-left:3px solid var(--red);padding:14px 16px;background:var(--red-soft)}
+.rd-reply .rd-lbl{font-size:11px;font-weight:700;color:var(--red);letter-spacing:.1em;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.rd-typing{font-size:13px;line-height:2;min-height:8.5em}
+.rd-caret{display:inline-block;width:2px;height:1.05em;background:var(--red);vertical-align:-2px;margin-left:1px;animation:blink .9s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.rd-note{margin-top:14px}
+/* 業務量の棒グラフ */
+.workload{margin-top:36px}
+.wl-row{margin-bottom:20px}
+.wl-lbl{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
+.wl-lbl .v{font-family:var(--font-mono);font-weight:600}
+.wl-bar{height:10px;background:var(--paper-2);position:relative;overflow:hidden}
+.wl-bar i{
+  position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:left;
+  transition:transform 1.3s var(--ease-draw) .2s;
+}
+.wl-row:nth-child(2) .wl-bar i{transition-delay:.35s}
+.wl-row:nth-child(3) .wl-bar i{transition-delay:.5s}
+.wl-row:nth-child(4) .wl-bar i{transition-delay:.65s;background:var(--red)}
+.wl-row.is-in .wl-bar i{transform:scaleX(var(--w,1))}
+
+/* ============================================================
+   SEC.04 CONTACT
+   ============================================================ */
+.contact{
+  background:var(--ink);color:var(--white);
+  padding:clamp(96px,14vh,180px) 0;position:relative;overflow:hidden;
+}
+.contact::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+.contact .wrap{position:relative}
+.ct-sec{font-family:var(--font-mono);font-size:12px;letter-spacing:.3em;color:var(--marker);margin-bottom:22px}
+.ct-copy{
+  font-family:var(--font-mono);font-weight:600;
+  font-size:clamp(28px,5.6vw,64px);letter-spacing:.01em;line-height:1.25;margin-bottom:18px;
+}
+.ct-copy .cw{display:inline-block;opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+.is-in .ct-copy .cw{opacity:1;transform:none}
+.ct-copy .cw:nth-child(2){transition-delay:.1s}
+.ct-copy .cw:nth-child(3){transition-delay:.2s}
+.ct-copy .cw:nth-child(4){transition-delay:.3s}
+.ct-copy .cw:nth-child(5){transition-delay:.4s}
+.ct-sub{color:rgba(255,255,255,.65);font-size:14px;max-width:520px;margin-bottom:44px}
+.ct-btn{
+  display:inline-flex;align-items:center;gap:16px;
+  background:var(--white);color:var(--ink);font-weight:900;font-size:15px;letter-spacing:.08em;
+  padding:20px 38px;position:relative;overflow:hidden;transition:color .35s;
+}
+.ct-btn::before{content:"";position:absolute;inset:0;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease-draw)}
+.ct-btn:hover{color:var(--white)}
+.ct-btn:hover::before{transform:scaleX(1)}
+.ct-btn span{position:relative}
+.footer{background:var(--ink);color:rgba(255,255,255,.45);padding:26px 0;border-top:1px solid rgba(255,255,255,.1)}
+.footer .wrap{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;flex-wrap:wrap;gap:8px}
+
+/* ============================================================
+   ケース詳細モーダル
+   ============================================================ */
+.modal{
+  position:fixed;inset:0;z-index:200;display:flex;justify-content:flex-end;
+  visibility:hidden;pointer-events:none;
+}
+.modal.is-open{visibility:visible;pointer-events:auto}
+.modal-bg{position:absolute;inset:0;background:rgba(28,43,58,.5);opacity:0;transition:opacity .4s}
+.modal.is-open .modal-bg{opacity:1}
+.modal-panel{
+  position:relative;width:min(680px,100%);height:100%;background:var(--paper);
+  overflow-y:auto;padding:clamp(28px,4vw,56px);
+  transform:translateX(100%);transition:transform .55s var(--ease-out);
+  box-shadow:-20px 0 60px rgba(28,43,58,.25);
+}
+.modal.is-open .modal-panel{transform:none}
+.modal-close{
+  position:sticky;top:0;float:right;width:44px;height:44px;background:var(--ink);color:var(--white);
+  font-family:var(--font-mono);font-size:16px;z-index:5;transition:background .3s;
+}
+.modal-close:hover{background:var(--red)}
+.md-cat{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;color:var(--red)}
+.md-title{font-size:clamp(22px,3vw,30px);font-weight:900;line-height:1.5;margin:10px 0 30px}
+.md-sec{margin-bottom:30px;padding-bottom:26px;border-bottom:1px dashed var(--grid-strong)}
+.md-sec h4{display:flex;align-items:baseline;gap:10px;font-size:15px;font-weight:900;margin-bottom:10px}
+.md-sec h4 .no{font-family:var(--font-mono);font-size:10px;color:var(--red);letter-spacing:.14em}
+.md-sec p,.md-sec li{font-size:13.5px;color:var(--ink-soft);line-height:2}
+.md-sec li{padding-left:16px;position:relative;margin-bottom:4px}
+.md-sec li::before{content:"—";position:absolute;left:0;color:var(--red)}
+body.modal-lock{overflow:hidden}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:960px){
+  .gnav{display:none}
+  .burger{display:block}
+  .strengths{grid-template-columns:repeat(6,1fr)}
+  .st-1{grid-column:1/7;grid-row:auto}
+  .st-2{grid-column:1/6;margin-top:0;margin-left:clamp(0px,4vw,32px)}
+  .st-3{grid-column:2/7;max-width:100%}
+  .case,.case-1,.case-2,.case-3{display:block}
+  .case-visual{aspect-ratio:16/9;margin-bottom:22px}
+  .case-2 .case-visual{order:0}
+  .case-2{padding-left:clamp(0px,6vw,48px)}
+  .case-3{padding-right:clamp(0px,6vw,48px)}
+  .process{grid-template-columns:1fr 1fr}
+  .pr-arrow{display:none}
+  .about-grid{display:block}
+  .about-side{margin-top:40px}
+}
+@media (max-width:600px){
+  body{font-size:15px}
+  .process{grid-template-columns:1fr}
+  .hero-stats{flex-direction:column;border-top:none}
+  .h-stat{border-right:none;border-top:1px dashed var(--ink-faint);padding:14px 0;margin-right:0;display:flex;align-items:baseline;gap:14px}
+  .h-stat .lbl{margin-top:0}
+  .h-anno-2{display:none}
+  .st-2,.st-3{margin-left:0}
+  .st-3{grid-column:1/7}
+  .strengths{grid-template-columns:1fr}
+  .st-1,.st-2,.st-3{grid-column:auto}
+  .st-2{transform:translateX(4vw)}
+  .st-3{transform:translateX(-2vw) scale(.98);transform-origin:left}
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-delay:0s!important;transition-duration:.001s!important;transition-delay:0s!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="header" id="header">
+  <a class="logo" href="#top">
+    <span class="en">WEB OPERATIONS DIRECTOR</span>
+    <span class="jp">選ばれる理由を、設計する。</span>
+  </a>
+  <nav class="gnav">
+    <a href="#strengths"><span class="nav-idx">01</span>強み</a>
+    <a href="#cases"><span class="nav-idx">02</span>ケーススタディ</a>
+    <a href="#history"><span class="nav-idx">03</span>軌跡</a>
+    <a href="#about"><span class="nav-idx">04</span>About</a>
+    <a class="nav-cta" href="#contact">相談する</a>
+  </nav>
+  <button class="burger" id="burger" aria-label="メニュー" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- モバイルナビ -->
+<nav class="m-nav" id="mnav" aria-hidden="true">
+  <a href="#strengths"><span class="nav-idx">01</span>強み</a>
+  <a href="#cases"><span class="nav-idx">02</span>ケーススタディ</a>
+  <a href="#history"><span class="nav-idx">03</span>軌跡</a>
+  <a href="#about"><span class="nav-idx">04</span>About</a>
+  <a href="#contact"><span class="nav-idx">05</span>相談する</a>
+  <p class="m-note">LET'S TALK ABOUT THE WORK.</p>
+</nav>
+
+<main id="top">
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-label">
+      <span class="tag">Web運用ディレクター</span>
+      <span class="en">CLIENT WORK / ANALYTICS / GROWTH</span>
+    </div>
+
+    <h1 class="hero-copy">
+      <span class="hero-line"><span>
+        <span class="strike">作っただけ<span class="strike-fix">↑ ここで終わらせない</span></span>で、終わらせない。
+      </span></span>
+      <span class="hero-line"><span>
+        <span class="circle-red">選ばれる理由
+          <svg viewBox="0 0 300 90" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M28,48 C20,18 90,6 158,8 C232,10 292,22 289,46 C286,74 216,86 142,84 C70,82 12,72 22,44 C26,32 44,24 70,20"/>
+          </svg>
+        </span>を、<span class="mk-hero">設計する。</span>
+      </span></span>
+    </h1>
+
+    <div class="hero-annos" aria-hidden="true">
+      <span class="h-anno h-anno-1">要検証 → データで裏取り<span class="ln"></span></span>
+      <span class="h-anno h-anno-2">顧客の視点で書き直し<span class="ln"></span></span>
+    </div>
+
+    <p class="hero-sub">
+      約<b>4年半</b>、医療・教育・不動産・住宅・飲食など<b>複数業界のクライアントのWeb運用を同時並行で担当</b>。
+      SEO・MEO・SNSの制作運用から、分析レポート、営業連携、セールスメールでの新規開拓まで手を動かしてきました。
+    </p>
+
+    <div class="hero-stats">
+      <div class="h-stat">
+        <div class="num"><span class="count" data-to="150">0</span>〜<span class="count" data-to="200">0</span><small>件/月</small></div>
+        <div class="lbl">クライアント向けレポート</div>
+      </div>
+      <div class="h-stat">
+        <div class="num">約<span class="count" data-to="20">0</span><small>アカウント</small></div>
+        <div class="lbl">SNS運用の同時並行</div>
+      </div>
+      <div class="h-stat">
+        <div class="num"><span class="count" data-to="5">0</span><small>万PV/月</small></div>
+        <div class="lbl">0→1で立ち上げたメディア</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue"><span class="bar"></span>SCROLL</div>
+</section>
+
+<!-- ============ SEC.01 強み ============ -->
+<section class="sec" id="strengths">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tab rv">SEC. 01 — STRENGTHS</span>
+      <h2 class="sec-title rv rv-d1">この人が<span class="ul-red is-pending">解決できる課題<svg viewBox="0 0 200 12" preserveAspectRatio="none"><path style="--len:220" d="M4,8 C40,4 80,9 120,6 C155,4 180,7 196,5"/></svg></span></h2>
+      <p class="sec-note rv rv-d2">重要度の高い順に、面積で示しています。数字はすべて実務のものです。</p>
+    </div>
+
+    <div class="strengths">
+      <article class="st-card st-1 rv">
+        <span class="st-rank">PRIORITY / 01</span>
+        <div class="st-icon" aria-hidden="true">
+          <svg viewBox="0 0 44 44"><path class="dr" d="M8 34 L8 10 M8 34 L36 34 M12 28 L18 20 L24 24 L34 12 M30 12 L34 12 L34 16"/></svg>
+        </div>
+        <h3>レポートを起点に、契約継続・拡大を生む。</h3>
+        <p>
+          アクセス・検索順位・クリック率を前月と比較し、「実績数値 → 前月差 → その理由 → 次の改善 → 関連サービスの提案」という共通形式で毎月作成。
+          必要に応じて営業担当と連携し、複数社の契約継続・新規契約・支援範囲や契約金額の拡大につながりました。
+        </p>
+        <div class="st-num"><span class="count" data-to="150">0</span>〜<span class="count" data-to="200">0</span><small>件 / 月</small></div>
+        <div class="st-tagline">REPORTS THAT LEAD TO CONTRACTS</div>
+        <div class="st-flow" aria-hidden="true">
+          <span class="box">数値</span><span class="arr"></span>
+          <span class="box">理由</span><span class="arr"></span>
+          <span class="box">次の行動</span><span class="arr"></span>
+          <span class="box red">契約継続・拡大</span>
+        </div>
+      </article>
+
+      <article class="st-card st-2 rv rv-d1">
+        <span class="st-rank">PRIORITY / 02</span>
+        <div class="st-icon" aria-hidden="true">
+          <svg viewBox="0 0 44 44"><path class="dr" d="M6 38 C10 30 12 20 22 14 C30 9 38 8 38 8 C38 8 37 18 30 26 C24 33 14 36 6 38 Z M6 38 L20 24"/></svg>
+        </div>
+        <h3>0→1でメディアを<br>月5万PV規模まで育てる。</h3>
+        <p>
+          立ち上げ直後の新規オウンドメディアで、検索順位・流入キーワード・競合記事を分析し、記事制作と改善を継続。
+          4か月で月間1万PV、その後月間5万PV規模まで成長。別の複数サイトでも流入を拡大し、対象キーワード100語以上が検索上位10位以内に。
+        </p>
+        <div class="st-num"><span class="count" data-to="5">0</span><small>万PV / 月</small></div>
+        <div class="st-tagline">ZERO TO ONE GROWTH</div>
+      </article>
+
+      <article class="st-card st-3 rv rv-d2">
+        <span class="st-rank">PRIORITY / 03</span>
+        <div class="st-icon" aria-hidden="true">
+          <svg viewBox="0 0 44 44"><path class="dr" d="M10 12 h24 M10 22 h24 M10 32 h14 M34 28 l4 4 l-4 4"/></svg>
+        </div>
+        <h3>複数チャネルを、並行運用。</h3>
+        <p>
+          SNS月約20アカウント、Googleビジネスプロフィール投稿 月約40件、口コミ返信 月最大約50件、レポート月150〜200件を横断。
+          緊急依頼には当日の作業順を組み替えて対応してきました。
+        </p>
+        <div class="st-num">約<span class="count" data-to="20">0</span><small>アカウント / 月</small></div>
+        <div class="st-tagline">MULTI-CHANNEL OPERATIONS</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEC.02 ケーススタディ ============ -->
+<section class="sec" id="cases" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tab rv">SEC. 02 — CASE STUDIES</span>
+      <h2 class="sec-title rv rv-d1">選ばれる理由の、<span class="mk">設計プロセス</span></h2>
+      <p class="sec-note rv rv-d2">実務での担当案件をもとに、課題 → 仮説 → 施策 → 結果の流れで再構成しています。</p>
+    </div>
+
+    <div class="cases">
+      <!-- CASE 1 不動産（口コミ返信） -->
+      <article class="case case-1 rv">
+        <div class="case-visual" aria-hidden="true">
+          <svg viewBox="0 0 320 200">
+            <text class="cv-label" x="34" y="30">CUSTOMER REVIEW</text>
+            <path class="cv-sub" d="M34 52 H286 M34 76 H240 M34 100 H286 M34 124 H200"/>
+            <rect class="cv-mk" x="30" y="68" width="146" height="16"/>
+            <path class="cv-red" d="M44 78 C36 62 96 56 150 58 C204 60 232 68 228 80 C224 92 168 96 118 94 C72 92 38 88 44 74"/>
+            <path class="cv-line" d="M206 124 C230 130 252 144 258 162"/>
+            <circle class="cv-dot" cx="258" cy="164" r="4"/>
+            <text class="cv-label" x="212" y="182">→ 強みとして返信へ</text>
+          </svg>
+        </div>
+        <div class="case-body">
+          <span class="case-cat">CASE 01 / 不動産会社 — 口コミ返信・Googleビジネスプロフィール</span>
+          <h3>顧客の声から、担当者の<br>「選ばれる理由」を言語化する。</h3>
+          <p class="case-issue">
+            <b>課題:</b> 「丁寧」「迅速」の繰り返しでは、企業の強みが具体的に伝わらない。<br>
+            <b>担当:</b> 口コミから評価された理由を読み取り、体験の具体に触れた返信を一件ずつ作成。
+          </p>
+          <div class="case-voice">この担当者だから任せた<small>― 返信で拾い上げた顧客の声のひとつ</small></div>
+          <div><button class="case-btn" data-modal="modal-1">プロセスを読む<span class="ar">→</span></button></div>
+        </div>
+      </article>
+
+      <!-- CASE 2 歯科・医療（口コミ返信） -->
+      <article class="case case-2 rv">
+        <div class="case-visual" aria-hidden="true">
+          <svg viewBox="0 0 320 200">
+            <text class="cv-label" x="36" y="26">REVIEW</text>
+            <path class="cv-sub" d="M36 36 H190 a8 8 0 0 1 8 8 V78 a8 8 0 0 1 -8 8 H60 L44 100 L48 86 H36 Z"/>
+            <path class="cv-sub" d="M52 54 H180 M52 68 H150"/>
+            <text class="cv-label" x="126" y="120">REPLY — 医院の言葉で</text>
+            <path class="cv-line" d="M126 130 H284 a8 8 0 0 1 8 8 V172 a8 8 0 0 1 -8 8 H160 L144 194 L148 180 H126 a0 0 0 0 1 0 0 Z"/>
+            <path class="cv-red" d="M142 148 H272 M142 162 H236"/>
+            <circle class="cv-dot" cx="284" cy="120" r="4"/>
+          </svg>
+        </div>
+        <div class="case-body">
+          <span class="case-cat">CASE 02 / 歯科・矯正歯科など医療機関 — 口コミ返信</span>
+          <h3>不安に配慮した返信で、<br>医院の姿勢を伝える。</h3>
+          <p class="case-issue">
+            <b>課題:</b> 治療への不安を抱える顧客に配慮しつつ、医療広告として過度な表現を避ける必要。<br>
+            <b>担当:</b> 説明の分かりやすさや不安が和らいだ体験を読み取り、落ち着いた返信を作成。待ち時間への不満には、言い訳に見えない形で改善姿勢を示す。
+          </p>
+          <div><button class="case-btn" data-modal="modal-2">プロセスを読む<span class="ar">→</span></button></div>
+        </div>
+      </article>
+
+      <!-- CASE 3 SEO -->
+      <article class="case case-3 rv">
+        <div class="case-visual" aria-hidden="true">
+          <svg viewBox="0 0 320 200">
+            <path class="cv-sub" d="M20 170 H300 M20 170 V20"/>
+            <text class="cv-label" x="20" y="14">PV / MONTH</text>
+            <path class="cv-line" d="M30 166 C80 165 110 163 140 156 C180 146 210 118 240 84 C262 60 284 44 298 32"/>
+            <circle class="cv-dot" cx="140" cy="156" r="4"/>
+            <circle class="cv-dot" cx="298" cy="32" r="5"/>
+            <text class="cv-label" x="120" y="146">4か月で 10,000 PV</text>
+            <text class="cv-label" x="216" y="110">50,000 PV規模</text>
+            <text class="cv-label" x="30" y="158">0 →</text>
+          </svg>
+        </div>
+        <div class="case-body">
+          <span class="case-cat">CASE 03 / 新規オウンドメディア — SEO</span>
+          <h3>アクセスほぼゼロから、<br>月間5万PV規模へ。</h3>
+          <p class="case-issue">
+            <b>課題:</b> 立ち上げ直後でアクセスがほとんどなく、検索流入を増やす必要があった。<br>
+            <b>担当:</b> 検索順位・流入キーワード・競合記事の分析、不足情報の追加、見出し構成の見直し、検索意図に沿った記事制作・改善を継続。
+          </p>
+          <div><button class="case-btn" data-modal="modal-3">プロセスを読む<span class="ar">→</span></button></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEC.03 軌跡 ============ -->
+<section class="sec" id="history">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tab rv">SEC. 03 — HISTORY</span>
+      <h2 class="sec-title rv rv-d1">4年間の軌跡</h2>
+    </div>
+    <div class="timeline" id="timeline">
+      <span class="tl-line" aria-hidden="true"></span>
+      <div class="tl-item rv">
+        <span class="tl-phase">PHASE 1 — 書く</span>
+        <p class="tl-date">2021.03 — 2022.09（約1年7か月）</p>
+        <h3>保育・教育系Webライター</h3>
+        <p>読者に届く文章の基礎を習得。「誰に・何を・なぜ」を突き詰める姿勢の原点。</p>
+      </div>
+      <div class="tl-item rv">
+        <span class="tl-phase">PHASE 2 — 運用する</span>
+        <p class="tl-date">2023.02 — 2025.12（約2年11か月）</p>
+        <h3>Web運用支援</h3>
+        <p>SEO記事・MEO・SNS・レポート・顧客対応を横断し、複数業界のクライアントを同時並行で担当。勤務した2社でチーム内トップの評価を受け、中心的なポジションを任されました。</p>
+      </div>
+      <div class="tl-item rv">
+        <span class="tl-phase">PHASE 3 — 設計する</span>
+        <p class="tl-date">現在</p>
+        <h3>設計の深化</h3>
+        <p>運用の実務経験を土台に、「選ばれる理由」から逆算する設計力をさらに磨いています。</p>
+      </div>
+    </div>
+
+    <div style="margin-top:clamp(72px,10vw,120px)">
+      <div class="sec-head">
+        <h2 class="sec-title rv" style="font-size:clamp(20px,2.8vw,30px)">できること・担当業務</h2>
+      </div>
+      <div class="process">
+        <div class="pr-step">
+          <span class="pr-no">STEP 01</span>
+          <h3>課題の発見<span class="pr-arrow" aria-hidden="true">→</span></h3>
+          <p>データとヒアリングから、成果が出ない本当の理由を特定する。</p>
+        </div>
+        <div class="pr-step">
+          <span class="pr-no">STEP 02</span>
+          <h3>設計<span class="pr-arrow" aria-hidden="true">→</span></h3>
+          <p>顧客理解にもとづき、「選ばれる理由」から逆算した打ち手を組み立てる。</p>
+        </div>
+        <div class="pr-step">
+          <span class="pr-no">STEP 03</span>
+          <h3>制作・運用<span class="pr-arrow" aria-hidden="true">→</span></h3>
+          <p>SEO記事・MEO・SNS。自分の手を動かし、定常と突発を両立して進行。</p>
+        </div>
+        <div class="pr-step">
+          <span class="pr-no">STEP 04</span>
+          <h3>改善</h3>
+          <p>レポートで検証し、次の一手を提案。営業連携で契約にもつなげる。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="sec" id="about" style="background:var(--paper-2)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-tab rv">ABOUT — 憑依型のリサーチ</span>
+      <h2 class="sec-title rv rv-d1">その企業に、<span class="ul-red is-pending">なりきって考える<svg viewBox="0 0 200 12" preserveAspectRatio="none"><path style="--len:220" d="M4,8 C40,4 80,9 120,6 C155,4 180,7 196,5"/></svg></span>。</h2>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-main rv">
+        <p class="about-lead">
+          企業と顧客、両方の解像度を上げる。<br>それが「憑依型のリサーチ」です。
+        </p>
+        <p class="about-txt">
+          口コミ返信では、定型文ではなく「この会社の担当者ならどう書くか」まで考えます。
+          投稿者の体験から評価された点や不満を読み取り、個別の体験に触れながら、誤解や反発を招かない返信を一件ずつ作成。
+          月最大約50件の返信で、企業の姿勢やスタッフの強みが伝わる口コミ欄の運用を支えてきました。
+        </p>
+        <p class="about-txt">
+          フルリモート環境では、表計算・業務管理ツール・チャット・オンライン会議で進捗と確認待ちをこまめに共有。
+          締切と公開への影響を基準に順序を決め、緊急依頼には当日の作業順を組み替え、後ろ倒しにした作業も再設定して共有してきました。
+          ある日は約3時間でMEOレポート36件、SNS投稿の修正、Googleビジネスプロフィール投稿7件の予約、口コミ確認を並行して処理しています。
+        </p>
+
+        <div class="workload" id="workload">
+          <div class="wl-row rv" style="--w:1">
+            <div class="wl-lbl"><span>運用レポート（MEO・SEO・SNS）</span><span class="v">月150〜200件</span></div>
+            <div class="wl-bar"><i></i></div>
+          </div>
+          <div class="wl-row rv" style="--w:.3">
+            <div class="wl-lbl"><span>口コミ返信</span><span class="v">月最大約50件</span></div>
+            <div class="wl-bar"><i></i></div>
+          </div>
+          <div class="wl-row rv" style="--w:.25">
+            <div class="wl-lbl"><span>Googleビジネスプロフィール投稿</span><span class="v">月約40件</span></div>
+            <div class="wl-bar"><i></i></div>
+          </div>
+          <div class="wl-row rv" style="--w:.15">
+            <div class="wl-lbl"><span>SNS運用（企画・画像・文章・投稿）</span><span class="v">月約20アカウント</span></div>
+            <div class="wl-bar"><i></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-side rv rv-d1">
+        <div class="review-demo" id="reviewDemo">
+          <div class="rd-head"><span>REVIEW REPLY — LIVE DEMO</span><span>憑依型の具体例</span></div>
+          <div class="rd-review">
+            <span class="stars">★★★★☆</span><br>
+            先生の説明が分かりやすく、安心して治療を受けられました。待ち時間が少し長かったのが気になりました。
+          </div>
+          <div class="rd-reply">
+            <div class="rd-lbl">返信（担当者になったつもりで執筆）</div>
+            <div class="rd-typing"><span id="typingText"></span><span class="rd-caret" aria-hidden="true"></span></div>
+          </div>
+          <p class="rd-note anno">評価には具体的に感謝し、不満は言い訳に見えない形で受け止める</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEC.04 CONTACT ============ -->
+<section class="contact sec" id="contact">
+  <div class="wrap rv" id="contactInner">
+    <p class="ct-sec">SEC. 04 — CONTACT</p>
+    <p class="ct-copy" aria-label="LET'S TALK ABOUT THE WORK.">
+      <span class="cw">LET'S</span> <span class="cw">TALK</span> <span class="cw">ABOUT</span> <span class="cw">THE</span> <span class="cw">WORK.</span>
+    </p>
+    <p class="ct-sub">
+      Web運用・コンテンツマーケティングのご相談、採用に関するお問い合わせはこちらから。
+      ポートフォリオの詳細資料もご用意しています。
+    </p>
+    <a class="ct-btn" href="mailto:contact@example.com"><span>仕事について相談する</span><span class="mono" aria-hidden="true">→</span></a>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>WEB OPERATIONS DIRECTOR — PORTFOLIO</span>
+    <span>© 2026</span>
+  </div>
+</footer>
+
+</main>
+
+<!-- ============ ケース詳細モーダル ============ -->
+<div class="modal" id="modal-1" aria-hidden="true" role="dialog" aria-label="ケース1 詳細">
+  <div class="modal-bg" data-close></div>
+  <div class="modal-panel">
+    <button class="modal-close" data-close aria-label="閉じる">×</button>
+    <span class="md-cat">CASE 01 / 不動産会社 — 口コミ返信・Googleビジネスプロフィール</span>
+    <h3 class="md-title">顧客の声から、担当者の「選ばれる理由」を言語化する。</h3>
+    <div class="md-sec"><h4><span class="no">01</span>案件の性質と概要</h4><p>不動産会社のGoogleビジネスプロフィールにおける口コミ返信の運用。顧客が評価した理由を企業の強みとして伝えつつ、自然な返信にする必要があった。</p></div>
+    <div class="md-sec"><h4><span class="no">02</span>当時の課題</h4><ul><li>「丁寧」「迅速」という評価を繰り返すだけでは、具体的な価値として伝わらない</li><li>定型文では、投稿者の体験と企業のブランドに合った返信にならない</li></ul></div>
+    <div class="md-sec"><h4><span class="no">03</span>顧客理解のために読み取ったこと</h4><p>「行動が早い」「対応力が高い」「人柄がよい」「この担当者だから任せた」といった口コミの声から、顧客が本当に評価したポイントを抽出。複数物件の案内、追加情報の提供、顧客が気づかなかった点の確認、想定より早い進行など、体験の具体部分に注目した。</p></div>
+    <div class="md-sec"><h4><span class="no">04</span>担当したこと</h4><p>読み取った体験の具体部分に触れながら、感謝と今後の姿勢を個別に表現した返信文を一件ずつ作成。誤解や反発を招かない言葉選びを徹底した。</p></div>
+    <div class="md-sec"><h4><span class="no">05</span>確認できた成果</h4><p>顧客の言葉を通じて、担当者の信頼性と企業のサービス姿勢が第三者にも伝わる返信になった。安心感だけでなく、先回りした情報提供や確認力が強みとして伝わる内容を実現。</p></div>
+    <div class="md-sec"><h4><span class="no">06</span>他案件への応用</h4><p>「口コミの論点を分け、評価には具体的に感謝し、不満には受け止めと改善姿勢を示す」という返信の型は、医療・飲食・買取・移動サービスなど他業界の口コミ運用にも展開している。</p></div>
+    <p class="anno">詳細な数値・スクリーンショットは面談時にご共有できます</p>
+  </div>
+</div>
+
+<div class="modal" id="modal-2" aria-hidden="true" role="dialog" aria-label="ケース2 詳細">
+  <div class="modal-bg" data-close></div>
+  <div class="modal-panel">
+    <button class="modal-close" data-close aria-label="閉じる">×</button>
+    <span class="md-cat">CASE 02 / 歯科・矯正歯科など医療機関 — 口コミ返信</span>
+    <h3 class="md-title">不安に配慮した返信で、医院の姿勢を伝える。</h3>
+    <div class="md-sec"><h4><span class="no">01</span>案件の性質と概要</h4><p>歯科・矯正歯科を含む医療機関の口コミ返信。治療への不安を抱える顧客に配慮しつつ、医療広告として過度な表現を避ける必要があった。</p></div>
+    <div class="md-sec"><h4><span class="no">02</span>当時の課題と制約</h4><ul><li>治療への評価と待ち時間への不満が混在する口コミに、誠実に対応する必要があった</li><li>医療広告の観点から、効果を誇張するような表現は使えない</li></ul></div>
+    <div class="md-sec"><h4><span class="no">03</span>顧客理解のために読み取ったこと</h4><p>説明の分かりやすさ、丁寧さ、不安が和らいだ体験、継続通院への感謝——口コミから、来院者が何に安心し、何を評価したのかを読み取った。</p></div>
+    <div class="md-sec"><h4><span class="no">04</span>担当したこと</h4><ul><li>読み取った体験にもとづく、落ち着いた返信文の作成</li><li>治療への評価には感謝を伝え、待ち時間の不満には不便をかけたことを受け止め、言い訳に見えない形で改善姿勢を提示</li><li>あわせて地域事業者のGoogleビジネスプロフィールで、投稿作成・予約（全体で月約40件規模）、営業時間・サービス情報の更新、写真追加も担当</li></ul></div>
+    <div class="md-sec"><h4><span class="no">05</span>確認できた成果</h4><p>医療機関の丁寧な説明と安心感が伝わり、今後の来院にもつながる返信になった。肯定的な点を損なわず、否定的な意見にも向き合うブランド姿勢を示せた。口コミ返信は全体で月最大約50件を継続。</p></div>
+    <div class="md-sec"><h4><span class="no">06</span>関連する制作実績</h4><p>この実務経験をもとに、口コミを集める時期・評価と順位の関係・投稿の書き方などを解説するMEO・口コミ施策の専門記事群も継続制作した（2024.11〜2025.05）。</p></div>
+    <p class="anno">詳細な数値・スクリーンショットは面談時にご共有できます</p>
+  </div>
+</div>
+
+<div class="modal" id="modal-3" aria-hidden="true" role="dialog" aria-label="ケース3 詳細">
+  <div class="modal-bg" data-close></div>
+  <div class="modal-panel">
+    <button class="modal-close" data-close aria-label="閉じる">×</button>
+    <span class="md-cat">CASE 03 / 新規オウンドメディア — SEO</span>
+    <h3 class="md-title">アクセスほぼゼロから、月間5万PV規模へ。</h3>
+    <div class="md-sec"><h4><span class="no">01</span>案件の性質と概要</h4><p>立ち上げ直後の新規Webサイト・オウンドメディア。アクセスがほとんどなく、検索流入を増やす必要があった。</p></div>
+    <div class="md-sec"><h4><span class="no">02</span>担当したこと</h4><ul><li>検索順位・流入キーワード・競合記事の分析</li><li>不足情報の追加、見出し構成の見直し</li><li>検索意図に沿った記事制作・改善の継続</li></ul></div>
+    <div class="md-sec"><h4><span class="no">03</span>確認できた成果</h4><p>立ち上げから4か月で月間1万PVに到達し、その後は月間5万PV規模まで成長した。</p></div>
+    <div class="md-sec"><h4><span class="no">04</span>関連する成果 — 複数サイトへの展開</h4><p>別の複数業界の企業サイト・オウンドメディアでも、キーワード調査、競合分析、構成作成、執筆、既存記事のリライト、内部リンクやタイトルの調整を担当。複数サイトで月間数万PV規模まで流入が増加し、対象キーワードのうち100語以上が検索上位10位以内に入った。</p></div>
+    <div class="md-sec"><h4><span class="no">05</span>他案件への応用</h4><p>「分析 → 不足の特定 → 制作・改善」のサイクルは、他クライアントのSEO記事制作・リライトの進め方の土台になっている。</p></div>
+    <p class="anno">詳細な数値・スクリーンショットは面談時にご共有できます</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- Header scroll ---------- */
+  var header = document.getElementById("header");
+  var onScrollHeader = function(){
+    header.classList.toggle("is-scrolled", window.scrollY > 40);
+  };
+  window.addEventListener("scroll", onScrollHeader, {passive:true});
+  onScrollHeader();
+
+  /* ---------- Mobile nav ---------- */
+  var burger = document.getElementById("burger");
+  var mnav = document.getElementById("mnav");
+  function setNav(open){
+    burger.classList.toggle("is-open", open);
+    mnav.classList.toggle("is-open", open);
+    burger.setAttribute("aria-expanded", open);
+    mnav.setAttribute("aria-hidden", !open);
+    document.body.classList.toggle("modal-lock", open);
+  }
+  burger.addEventListener("click", function(){ setNav(!mnav.classList.contains("is-open")); });
+  mnav.querySelectorAll("a").forEach(function(a){
+    a.addEventListener("click", function(){ setNav(false); });
+  });
+
+  /* ---------- Reveal on scroll ---------- */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add("is-in");
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:.18, rootMargin:"0px 0px -6% 0px"});
+  document.querySelectorAll(".rv,.rv-wipe,.mk,.st-card,.case,.pr-step,.tl-item,.wl-row,.ul-red").forEach(function(el){
+    io.observe(el);
+  });
+
+  /* ---------- Count up ---------- */
+  var cio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      cio.unobserve(e.target);
+      var el = e.target, to = parseInt(el.dataset.to,10);
+      if(reduced){ el.textContent = to; return; }
+      var t0 = null, dur = 1400;
+      function step(t){
+        if(!t0) t0 = t;
+        var p = Math.min((t - t0)/dur, 1);
+        p = 1 - Math.pow(1-p, 3); /* easeOutCubic */
+        el.textContent = Math.round(to * p);
+        if(p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  },{threshold:.6});
+  document.querySelectorAll(".count").forEach(function(el){ cio.observe(el); });
+
+  /* ---------- Timeline progress ---------- */
+  /* ::after が CSS 変数 --p を参照し、スクロールに連動して線が伸びる */
+  var tl = document.getElementById("timeline");
+  var tlLine = tl ? tl.querySelector(".tl-line") : null;
+  if(tl && tlLine){
+    if(reduced){
+      tlLine.style.setProperty("--p", 1);
+    }else{
+      var tlTicking = false;
+      var updateTl = function(){
+        var r = tl.getBoundingClientRect();
+        var p = (window.innerHeight * 0.8 - r.top) / r.height;
+        tlLine.style.setProperty("--p", Math.max(0, Math.min(1, p)).toFixed(3));
+        tlTicking = false;
+      };
+      window.addEventListener("scroll", function(){
+        if(!tlTicking){ tlTicking = true; requestAnimationFrame(updateTl); }
+      }, {passive:true});
+      updateTl();
+    }
+  }
+
+  /* ---------- 口コミ返信タイピングデモ ---------- */
+  var typingEl = document.getElementById("typingText");
+  var typingText = "口コミをご投稿いただきありがとうございます。説明が分かりやすく、安心して治療をお受けいただけたとのお言葉、大変嬉しく拝見いたしました。一方で、お待たせしてしまいました点につきましては、ご不便をおかけし申し訳ございませんでした。いただいたご意見を真摯に受け止め、より快適にお過ごしいただけるよう努めてまいります。";
+  var typed = false;
+  var tio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting || typed) return;
+      typed = true;
+      tio.disconnect();
+      if(reduced){ typingEl.textContent = typingText; return; }
+      var i = 0;
+      (function tick(){
+        if(i <= typingText.length){
+          typingEl.textContent = typingText.slice(0, i);
+          i++;
+          setTimeout(tick, 42);
+        }
+      })();
+    });
+  },{threshold:.4});
+  if(typingEl) tio.observe(document.getElementById("reviewDemo"));
+
+  /* ---------- モーダル ---------- */
+  var lastFocus = null;
+  function openModal(id){
+    var m = document.getElementById(id);
+    if(!m) return;
+    lastFocus = document.activeElement;
+    m.classList.add("is-open");
+    m.setAttribute("aria-hidden","false");
+    document.body.classList.add("modal-lock");
+    var c = m.querySelector(".modal-close");
+    if(c) c.focus();
+  }
+  function closeModal(m){
+    m.classList.remove("is-open");
+    m.setAttribute("aria-hidden","true");
+    document.body.classList.remove("modal-lock");
+    if(lastFocus) lastFocus.focus();
+  }
+  document.querySelectorAll("[data-modal]").forEach(function(btn){
+    btn.addEventListener("click", function(){ openModal(btn.dataset.modal); });
+  });
+  document.querySelectorAll(".modal").forEach(function(m){
+    m.querySelectorAll("[data-close]").forEach(function(x){
+      x.addEventListener("click", function(){ closeModal(m); });
+    });
+  });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape"){
+      var open = document.querySelector(".modal.is-open");
+      if(open) closeModal(open);
+      if(mnav.classList.contains("is-open")) setNav(false);
+    }
+  });
+
+  /* ---------- スムーススクロール（ヘッダー高さ考慮） ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener("click", function(e){
+      var id = a.getAttribute("href");
+      if(id.length < 2) return;
+      var target = document.querySelector(id);
+      if(!target) return;
+      e.preventDefault();
+      var y = target.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({top:y, behavior: reduced ? "auto" : "smooth"});
+    });
+  });
+})();
+</script>
+</body>
+</html>
